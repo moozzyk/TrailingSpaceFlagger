@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("TrailingSpaceFlagger")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-assembly: AssemblyCompany("Pawel Kadluczka")]
+[assembly: AssemblyCompany("Pawel Kadluczka")]
 [assembly: AssemblyProduct("TrailingSpaceFlagger")]
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
