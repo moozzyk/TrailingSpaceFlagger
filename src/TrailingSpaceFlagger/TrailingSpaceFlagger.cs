@@ -13,6 +13,7 @@ namespace TrailingSpaceFlagger
         private readonly IWpfTextView _view;
         private readonly Brush _brush;
         private readonly Pen _pen;
+        private static readonly object _adornmentTag = new object();
 
         public TrailingSpaceFlagger(IWpfTextView view)
         {
@@ -35,56 +36,58 @@ namespace TrailingSpaceFlagger
         /// </summary>
         private void OnLayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
         {
-            var currentLine = _view.Caret.ContainingTextViewLine;
-
-            foreach (var line in e.NewOrReformattedLines.Except(new[] { currentLine }))
+            foreach (var line in e.NewOrReformattedLines)
             {
                 CreateVisuals(line);
             }
         }
 
-        /// <summary>
-        /// Within the given line add the scarlet box behind the a
-        /// </summary>
 
         private void OnCaretPositionChanged(object sender, CaretPositionChangedEventArgs eventArgs)
         {
-            if (_view.GetTextViewLineContainingBufferPosition(eventArgs.OldPosition.BufferPosition) !=
-                _view.GetTextViewLineContainingBufferPosition(eventArgs.NewPosition.BufferPosition))
-            {
-                CreateVisuals(_view.GetTextViewLineContainingBufferPosition(eventArgs.OldPosition.BufferPosition));
-            }
+            CreateVisuals(_view.GetTextViewLineContainingBufferPosition(eventArgs.OldPosition.BufferPosition));
         }
 
+        /// <summary>
+        /// Within the given line add the scarlet box behind trailing spaces
+        /// </summary>
         private void CreateVisuals(ITextViewLine line)
         {
-            //grab a reference to the lines in the current TextView 
+            //grab a reference to the lines in the current TextView
             var textViewLines = _view.TextViewLines;
             int start = line.Start;
             int end = line.End;
 
-            //Loop through each character, and place a box around any a 
-            for (var i = end - 1; (i >= start); --i)
+            var isCurrentLine = _view.Caret.ContainingTextViewLine == line;
+
+            for (var i = end - 1; i >= start; i--)
             {
                 if (_view.TextSnapshot[i] == ' ' || _view.TextSnapshot[i] == '\t')
                 {
                     var span = new SnapshotSpan(_view.TextSnapshot, Span.FromBounds(i, i + 1));
-                    var g = textViewLines.GetMarkerGeometry(span);
-                    if (g != null)
+                    if (!isCurrentLine || i >= _view.Caret.Position.BufferPosition.Position)
                     {
-                        var drawing = new GeometryDrawing(_brush, _pen, g);
-                        drawing.Freeze();
+                        var g = textViewLines.GetMarkerGeometry(span);
+                        if (g != null)
+                        {
+                            var drawing = new GeometryDrawing(_brush, _pen, g);
+                            drawing.Freeze();
 
-                        var drawingImage = new DrawingImage(drawing);
-                        drawingImage.Freeze();
+                            var drawingImage = new DrawingImage(drawing);
+                            drawingImage.Freeze();
 
-                        var image = new Image { Source = drawingImage };
+                            var image = new Image {Source = drawingImage};
 
-                        //Align the image with the top of the bounds of the text geometry
-                        Canvas.SetLeft(image, g.Bounds.Left);
-                        Canvas.SetTop(image, g.Bounds.Top);
+                            //Align the image with the top of the bounds of the text geometry
+                            Canvas.SetLeft(image, g.Bounds.Left);
+                            Canvas.SetTop(image, g.Bounds.Top);
 
-                        _layer.AddAdornment(AdornmentPositioningBehavior.TextRelative, span, null, image, null);
+                            _layer.AddAdornment(AdornmentPositioningBehavior.TextRelative, span, _adornmentTag, image, null);
+                        }
+                    }
+                    else
+                    {
+                        _layer.RemoveMatchingAdornments(span, a => a.Tag == _adornmentTag);
                     }
                 }
                 else
