@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using System.Windows.Media;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
@@ -42,10 +41,15 @@ namespace TrailingSpaceFlagger
             }
         }
 
-
         private void OnCaretPositionChanged(object sender, CaretPositionChangedEventArgs eventArgs)
         {
             CreateVisuals(_view.GetTextViewLineContainingBufferPosition(eventArgs.OldPosition.BufferPosition));
+
+            if (_view.GetTextViewLineContainingBufferPosition(eventArgs.OldPosition.BufferPosition) !=
+                _view.GetTextViewLineContainingBufferPosition(eventArgs.NewPosition.BufferPosition))
+            {
+                CreateVisuals(_view.GetTextViewLineContainingBufferPosition(eventArgs.NewPosition.BufferPosition));
+            }
         }
 
         /// <summary>
