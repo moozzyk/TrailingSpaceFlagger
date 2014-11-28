@@ -67,7 +67,11 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="trailing-spaces-vs.png">
+    <Content Include="trailing-spaces-vs-250.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="trailing-spaces-vs-icon.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
