@@ -4,6 +4,7 @@
     <Identity Id="TrailingSpaceFlagger..38c35944-afb3-4f10-8f3c-42cf17758d7c" Version="1.0" Language="en-US" Publisher="Pawel Kadluczka" />
     <DisplayName>Trailing Space Flagger</DisplayName>
     <Description>A Visual Studio extension which highlights trailing spaces.</Description>
+    <PreviewImage>trailing-spaces-vs.png</PreviewImage>
   </Metadata>
   <Installation>
     <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="11.0" />
