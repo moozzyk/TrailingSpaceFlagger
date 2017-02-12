@@ -55,9 +55,8 @@ namespace TrailingSpaceFlagger
         /// <summary>
         /// Within the given line add the scarlet box behind trailing spaces
         /// </summary>
-        
         private void CreateVisuals(ITextViewLine line)
-        { 
+        {
             //grab a reference to the lines in the current TextView
             var textViewLines = _view.TextViewLines;
             int start = line.Start;

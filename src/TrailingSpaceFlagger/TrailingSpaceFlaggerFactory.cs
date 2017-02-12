@@ -15,7 +15,7 @@ namespace TrailingSpaceFlagger
     internal sealed class TrailingSpaceFlaggerFactory : IWpfTextViewCreationListener
     {
         /// <summary>
-        /// Defines the adornment layer for the adornment. This layer is ordered 
+        /// Defines the adornment layer for the adornment. This layer is ordered
         /// after the selection layer in the Z-order
         /// </summary>
         [Export(typeof(AdornmentLayerDefinition))]
